@@ -10,7 +10,7 @@ module.exports = function(homebridge) {
 
 function broadlinkSP(log, config, api) {
     this.log = log;
-    //this.ip = config['ip'];
+    this.ip = config['ip'];
     this.name = config['name'];
     //this.mac = config['mac'];
     this.powered = false;
@@ -29,7 +29,7 @@ function broadlinkSP(log, config, api) {
 
 broadlinkSP.prototype.getState = function(callback) {
     var self = this
-    var b = new broadlink();
+    var b = new broadlink(this.ip);
     b.discover();
 
     b.on("deviceReady", (dev) => {
@@ -50,7 +50,7 @@ broadlinkSP.prototype.getState = function(callback) {
 
 broadlinkSP.prototype.setState = function(state, callback) {
     var self = this
-    var b = new broadlink();
+    var b = new broadlink(this.ip);
     b.discover();
 
     self.log("set SP state: " + state);
