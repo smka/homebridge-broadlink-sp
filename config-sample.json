@@ -9,8 +9,14 @@
     "description": "This is an example configuration for the Broadlink SP homebridge plugin",
 
     "accessories": [{
-        "accessory": "broadlinkSP",
-        "name": "My Broadlink",
-        "ip": "192.168.1.3"
-    }]
+            "accessory": "broadlinkSP",
+            "name": "My Broadlink SP1",
+            "ip": "192.168.1.13"
+        },
+        {
+            "accessory": "broadlinkSP",
+            "name": "My Broadlink SP2",
+            "ip": "192.168.1.23"
+        }
+    ]
 }
