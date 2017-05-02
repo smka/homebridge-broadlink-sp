@@ -1,35 +1,35 @@
 {
-  "name": "homebridge-broadlink-sp",
-  "version": "0.1.2",
-  "description": "Homebridge plugin for Broadlink SP2",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "homebridge-plugin",
-    "broadlink",
-    "sp",
-    "broadlinksp",
-    "plugin",
-    "homebridge",
-    "sp2"
-  ],
-  "engines": {
-    "node": ">=0.12.0",
-    "homebridge": ">=0.2.0"
-  },
-  "author": "smka",
-  "license": "MIT",
-  "dependencies": {
-    "broadlinkjs-sm": ">=0.1.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/smka/homebridge-broadlink-sp.git"
-  },
-  "bugs": {
-    "url": "https://github.com/smka/homebridge-broadlink-sp/issues"
-  },
-  "homepage": "https://github.com/smka/homebridge-broadlink-sp#readme"
+    "name": "homebridge-broadlink-sp",
+    "version": "0.1.2",
+    "description": "Homebridge plugin for Broadlink SP2/3",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "homebridge-plugin",
+        "broadlink",
+        "sp",
+        "broadlinksp",
+        "plugin",
+        "homebridge",
+        "sp2"
+    ],
+    "engines": {
+        "node": ">=0.12.0",
+        "homebridge": ">=0.2.0"
+    },
+    "author": "smka",
+    "license": "MIT",
+    "dependencies": {
+        "broadlinkjs-sm": ">=0.1.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smka/homebridge-broadlink-sp.git"
+    },
+    "bugs": {
+        "url": "https://github.com/smka/homebridge-broadlink-sp/issues"
+    },
+    "homepage": "https://github.com/smka/homebridge-broadlink-sp#readme"
 }

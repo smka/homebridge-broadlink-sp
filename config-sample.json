@@ -16,7 +16,7 @@
         {
             "accessory": "broadlinkSP",
             "name": "My Broadlink SP2",
-            "ip": "192.168.1.23"
+            "mac": "34:ea:34:e4:00:22"
         }
     ]
 }
