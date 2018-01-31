@@ -17,6 +17,13 @@
             "accessory": "broadlinkSP",
             "name": "My Broadlink SP2",
             "mac": "34:ea:34:e4:00:22"
+        },
+        {
+            "accessory": "broadlinkSP",
+            "name": "My Broadlink SP2 (device type 0x2711) - without discover",
+            "mac": "34:ea:34:e4:00:23",
+            "ip": "192.168.1.13",
+            "devtype": 10001
         }
     ]
 }

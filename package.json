@@ -1,6 +1,6 @@
 {
   "name": "homebridge-broadlink-sp",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Homebridge plugin for Broadlink SP2/3",
   "main": "index.js",
   "scripts": {
