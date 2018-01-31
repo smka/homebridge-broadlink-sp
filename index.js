@@ -13,7 +13,9 @@ function broadlinkSP(log, config, api) {
     this.ip = config['ip'];
     this.name = config['name'];
     this.mac = config['mac'];
-    this.powered = false;
+    this.devtype = config['devtype'];
+    this.powered = null;
+    this.addr = null;
 
     if (!this.ip && !this.mac) throw new Error("You must provide a config value for 'ip' or 'mac'.");
 
@@ -35,6 +37,10 @@ function broadlinkSP(log, config, api) {
         return mb;
     }
 
+    if (this.ip && this.mac && this.devtype) {
+        this.addr = {'address': this.ip, port: 80};            
+    }
+
     this.service = new Service.Switch(this.name);
 
     this.service.getCharacteristic(Characteristic.On)
@@ -50,66 +56,95 @@ function broadlinkSP(log, config, api) {
 broadlinkSP.prototype.getState = function(callback) {
     var self = this
     var b = new broadlink();
-    b.discover();
-
-    b.on("deviceReady", (dev) => {
-        if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
-            dev.check_power();
-            dev.on("power", (pwr) => {
-                self.log("power is on - " + pwr);
-                dev.exit();
-                if (!pwr) {
-                    self.powered = false;
-                    return callback(null, false);
-                } else {
-                    self.powered = true;
-                    return callback(null, true);
-                }
-            });
-        } else {
+    if (this.addr) {
+        var dev = b.genDevice(this.devtype, this.addr, this.mac);
+        dev.on("power", (pwr) => {
+            self.log("power is " + (pwr ? "ON" : "OFF"));
             dev.exit();
-        }
-    });
+            self.powered = pwr;
+            return callback(null, pwr);
+        });
+        dev.on("deviceReady", () => {
+            self.log("device ready");
+            dev.check_power();
+        });
+        dev.auth();    
+    } else {
+        b.discover();
+        b.on("deviceReady", (dev) => {
+            if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
+                dev.check_power();
+                dev.on("power", (pwr) => {
+                    self.log("power is on - " + pwr);
+                    dev.exit();
+                    if (!pwr) {
+                        self.powered = false;
+                        return callback(null, false);
+                    } else {
+                        self.powered = true;
+                        return callback(null, true);
+                    }
+                });
+            } else {
+                dev.exit();
+            }
+        });
+    }
 }
 
 broadlinkSP.prototype.setState = function(state, callback) {
     var self = this
-    var b = new broadlink();
-    b.discover();
-
     self.log("set SP state: " + state);
-    if (state) {
-        if (this.powered) {
-            return callback(null, true)
+    var b = new broadlink();
+    if (this.addr) {
+        if (state == this.powered && this.powered != null) {
+            return callback(null);
         } else {
-            b.on("deviceReady", (dev) => {
-                if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
-                    self.log("ON!");
-                    dev.set_power(true);
-                    dev.exit();
-                    this.powered = true;
-                    return callback(null);
-                } else {
-                    dev.exit();
-                }
+            var dev = b.genDevice(this.devtype, this.addr, this.mac);
+            dev.on("deviceReady", () => {
+                self.log("setting to " + (state ? "ON" : "OFF"));
+                dev.set_power(state);
+                dev.exit()
+                this.powered = state;
+                return callback(null);
             });
+            dev.auth();
         }
     } else {
-        if (this.powered) {
-            b.on("deviceReady", (dev) => {
-                if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
-                    self.log("OFF!");
-                    dev.set_power(false);
-                    dev.exit();
-                    self.powered = false;
-                    return callback(null);
-                } else {
-                    dev.exit();
-                }
-            });
+        b.discover();
+        if (state) {
+            if (this.powered) {
+                return callback(null, true)
+            } else {
+                b.on("deviceReady", (dev) => {
+                    if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
+                        self.log("ON!");
+                        dev.set_power(true);
+                        dev.exit();
+                        this.powered = true;
+                        return callback(null);
+                    } else {
+                        dev.exit();
+                    }
+                });
+            }
         } else {
-            return callback(null, false)
-        }
+            if (this.powered) {
+                b.on("deviceReady", (dev) => {
+                    if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
+                        self.log("OFF!");
+                        dev.set_power(false);
+                        dev.exit();
+                        self.powered = false;
+                        return callback(null);
+                    } else {
+                        dev.exit();
+                    }
+                });
+            } else {
+                return callback(null, false)
+            }
+        }        
     }
 }
 
